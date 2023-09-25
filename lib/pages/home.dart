@@ -18,36 +18,14 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    avab[0][0] = false;
-    drawGreenRectangles(nRows, nCols);
+    avab[2][30] = false;//testing box updates
 
     print(avab);
   }
 
 
 
-  void drawGreenRectangles(int columns, int rows) {
 
-    List<double> startX = [28, 100, 170, 240, 312, 385];//offsets for creating the columns of parking spaces
-
-
-    final double startY = 15;
-    final double verticalSpacing = 14.5;
-
-
-    for(int m = 0; m < columns; m++){
-      for (int i = 0; i < rows; i++) {
-
-        // Adjust the X position for the second column
-        double y = startY + (i * verticalSpacing);
-        double x = startX[m];
-
-        rectanglePositions.add(Offset(x, y));
-
-        }
-      }
-
-    }
 
 
   @override
@@ -67,7 +45,8 @@ class _HomeState extends State<Home> {
             child: Image(
               image: AssetImage('assets/camosunParkingLot.jpg'),
             ),
-            foregroundPainter: ShapePainter(rectanglePositions),
+            foregroundPainter: ShapePainter(avab),
+
 
           ),
         ),
@@ -77,29 +56,37 @@ class _HomeState extends State<Home> {
 }
 
 class ShapePainter extends CustomPainter {
-  final List<Offset> rectanglePositions;
+  final List<List<bool>> avab;
   final double rectWidth = 28;
   final double rectHeight = 10;
+  final double verticalSpacing = 14.5;   // Adjust this value as needed
+  List<double> startX = [14, 84, 155, 226, 298, 371];//offsets for creating the columns of parking spaces
+  final double startY = 10;
 
-  ShapePainter(this.rectanglePositions);
+
+  ShapePainter(this.avab);
 
   @override
   void paint(Canvas canvas, Size size) {
-    var paint = Paint()
-      ..color = DetermineColor(avab)
-      ..style = PaintingStyle.fill;
+    for (int row = 0; row < avab.length; row++) {
+      for (int col = 0; col < avab[row].length; col++) {
+        final bool isAvailable = avab[row][col];
+        final Color rectColor = isAvailable ? Colors.greenAccent : Colors.red;
 
+        final double x = startX[row]; // offsets for columns
+        final double y = col * verticalSpacing + startY;   // Adjust for spacing
 
-    final double rectRadius = 4;
+        final rect = Rect.fromPoints(
+          Offset(x, y),
+          Offset(x + rectWidth, y + rectHeight),
+        );
 
-    for (var position in rectanglePositions) {
-      final rect = Rect.fromCenter(
-        center: position,
-        width: rectWidth,
-        height: rectHeight,
+        final paint = Paint()
+          ..color = rectColor
+          ..style = PaintingStyle.fill;
 
-      );
-      canvas.drawRRect(RRect.fromRectAndRadius(rect, Radius.circular(rectRadius)), paint);
+        canvas.drawRect(rect, paint);
+      }
     }
   }
 
@@ -107,15 +94,4 @@ class ShapePainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) {
     return false;
   }
-
-
-  Color DetermineColor(List<List<bool>> arr) {
-    if(arr[0][0]) {
-      return Colors.greenAccent;
-    }
-    else{
-      return Colors.red;
-    }
-  }
-  }
-
+}
