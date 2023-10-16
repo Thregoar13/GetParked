@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-//import 'package:matrix2d/matrix2d.dart';
+
+
 
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
+
 
 var nCols = 31;
 var nRows = 6;
@@ -17,7 +19,9 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
+
     super.initState();
+
     avab[2][30] = false;//testing box updates
 
     print(avab);
@@ -42,8 +46,8 @@ class _HomeState extends State<Home> {
         padding: const EdgeInsets.fromLTRB(0, 120.0, 0, 0),
         child: GestureDetector(
           child: CustomPaint(
-            child: Image(
-              image: AssetImage('assets/camosunParkingLot.jpg'),
+            child: Image.network(
+              "https://storage.googleapis.com/getparked/CHW%20Lot%201.png",
             ),
             foregroundPainter: ShapePainter(avab),
 
@@ -71,7 +75,7 @@ class ShapePainter extends CustomPainter {
     for (int row = 0; row < avab.length; row++) {
       for (int col = 0; col < avab[row].length; col++) {
         final bool isAvailable = avab[row][col];
-        final Color rectColor = isAvailable ? Colors.greenAccent : Colors.red;
+        final Color rectColor = isAvailable ? Colors.green : Colors.red;
 
         final double x = startX[row]; // offsets for columns
         final double y = col * verticalSpacing + startY;   // Adjust for spacing
