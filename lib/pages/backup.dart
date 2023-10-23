@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:get_parked/services/parking_format.dart'; //import the ParkingLot class
-
-
-
+import 'package:http/http.dart';
 
 
 
@@ -14,60 +9,52 @@ class Home extends StatefulWidget {
 }
 
 
-
-
-
-
-
-
+var nCols = 31;
+var nRows = 6;
+var avab = List<List<bool>>.generate(nRows, (i) => List<bool>.generate(nCols,(j)=> true));
+//create an array with all spaces in a parking lot
 
 
 class _HomeState extends State<Home> {
-
-
-  void setupParkingFormat() async{
-
-    List<ParkingStall> instance = [];
-
-
-    ParkingLot parkingLot = ParkingLot(lotName: 'error', lotURL: 'error', totalStalls: 1, parkingStalls: instance);
-
-
-    await parkingLot.fetchData();
-  }
-
-
-
+  List<Offset> rectanglePositions = [];
 
   @override
   void initState() {
+
     super.initState();
-    setupParkingFormat();
 
-
+    avab[2][30] = false;//testing box updates
     //   print(avab);
   }
 
 
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        if (constraints.maxWidth > 600) {
-          return Center(
-            child: Image.network(
-              parkingLot.lotURL // Use the lotURL from the fetched data
-            ),
-          );
-        } else {
-          return const Center(
-            child: Text('screen under 600'),
-          );
-        }
-      },
+    return Scaffold(
+      backgroundColor: Colors.grey[200],
+      appBar: AppBar(
+        backgroundColor: Colors.blue[900],
+        title: Text('Camosun Parking Lot B'),
+        centerTitle: true,
+        elevation: 0,
+      ),
+      body: GestureDetector(
+        child: CustomPaint(
+          child: Image.network(
+            "https://storage.googleapis.com/getparked/CHW%20Lot%201.png",
+          ),
+          foregroundPainter: ShapePainter(avab),
+
+
+        ),
+      ),
     );
   }
-
 }
 
 class ShapePainter extends CustomPainter {
@@ -110,5 +97,3 @@ class ShapePainter extends CustomPainter {
     return false;
   }
 }
-
-
