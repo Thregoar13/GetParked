@@ -21,12 +21,12 @@ class _DetailedState extends State<Detailed> {
 
 
 
-
   @override
 
 
   void initState(){
     super.initState();
+
 
 
     //print();
@@ -37,7 +37,14 @@ class _DetailedState extends State<Detailed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        backgroundColor: Colors.blue[900],
+        title: Text('Parking Lot'),
+        centerTitle: true,
+        elevation: 0,
+      ),
+      body: SingleChildScrollView(
         child: FutureBuilder<ParkingLot>(
           future: futureParkingLot,
           builder: (context, snapshot) {
@@ -47,7 +54,7 @@ class _DetailedState extends State<Detailed> {
               parkingLot = snapshot.data;
               return Column(
                 children: [
-                  Center(child: Image.network(parkingLot!.lotURL)),
+                  FittedBox(child: Image.network(parkingLot!.lotURL)),
                 ],
               );
             } else {
@@ -65,5 +72,4 @@ class _DetailedState extends State<Detailed> {
   }
 
 }
-
 
