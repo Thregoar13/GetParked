@@ -10,9 +10,26 @@ class Detailed extends StatefulWidget{
 
 class _DetailedState extends State<Detailed> {
 
+
   double imageHeight = 1080;
   double imageWidth = 1920;
   int rotation = 0;
+List<bool> avab = [
+  true, false, true, true, true, false, true, true,true, false, true, true,true, false, true, true,
+  true, false, true, true, true, false, true, true,true, false, true, true,true, false, true, true,
+  true, false, true, true,true, false, true, true,true, false, true, true,true, false, true, true,
+  true, false, true, true,true, false, true, true,true, false, true, true,true, false, true, true,
+  true, false, true, true,true, false, true, true,true, false, true, true,true, false, true, true,
+  true, false, true, true,true, false, true, true,true, false, true, true,true, false, true, true,
+  true, false, true, true,true, false, true, true,true, false, true, true,true, false, true, true,
+  true, false, true, true,true, false, true, true,true, false, true, true,true, false, true, true,
+  true, false, true, true, true, false, true, true,true, false, true, true,true, false, true, true,
+  true, false, true, true, true, false, true, true,true, false, true, true,true, false, true, true,
+  true, false, true, true, true, false, true, true,true, false, true, true,true, false, true, true,
+  true, false, true, true, true, false, true, true,true, false, true, true,true, false, true, true,];
+
+
+
 
   ParkingLot? parkingLot = ParkingLot(
     lotName: "Default Lot",
@@ -29,6 +46,8 @@ class _DetailedState extends State<Detailed> {
 
 
   void initState(){
+
+
     super.initState();
   }
 
@@ -65,9 +84,11 @@ class _DetailedState extends State<Detailed> {
                       child:CustomPaint(size: Size(imageWidth, imageHeight),
                         child: Image.network(parkingLot!.lotURL),// Set the size as per your image dimensions
                         foregroundPainter: RectanglePainter(
+
                           parkingLot!.parkingStalls,
                           imageWidth,
                           imageHeight,
+                          avab,
                         ),
                       ),
                     ),
@@ -90,38 +111,37 @@ class RectanglePainter extends CustomPainter {
   final List<ParkingStalls> parkingStalls;
   final double imageWidth;
   final double imageHeight;
+  final List<bool> avab; // List of availability statuses
 
-  RectanglePainter(this.parkingStalls, this.imageWidth, this.imageHeight);
+  RectanglePainter(this.parkingStalls,  this.imageWidth, this.imageHeight, this.avab);
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.black87
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 5.0;
+    for (int i = 0; i < parkingStalls.length; i++) {
+      final paint = Paint()
+        ..style = PaintingStyle.fill;
 
-    final paint2 = Paint()
-      ..color = Colors.green
-      ..style = PaintingStyle.fill;
+      final paint2 = Paint()
+        ..color = Colors.black87
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 4.0;
 
 
-    for (var stall in parkingStalls) {
-      final x = (stall.x / imageWidth) * size.width;
-      final y = (stall.y / imageHeight) * size.height;
-      final rect = Rect.fromPoints(Offset(x, y), Offset(x + 35, y + 80)); // Adjust the rectangle size as needed
-      final x2 = ((stall.x + 2) / imageWidth) * size.width ;
-      final y2 = ((stall.y + 2)  / imageHeight) * size.height ;
-      final rect2 = Rect.fromPoints(Offset(x2, y2), Offset(x2 + 31, y2 + 76));
+      final x = ((parkingStalls[i].x + 2) / imageWidth) * size.width;
+      final y = ((parkingStalls[i].y + 2) / imageHeight) * size.height;
+      final x2 = (parkingStalls[i].x / imageWidth) * size.width;
+      final y2 = (parkingStalls[i].y / imageHeight) * size.height;
+
+      final rect = Rect.fromPoints(Offset(x, y), Offset(x + 27, y + 76));
+      final rect2 = Rect.fromPoints(Offset(x2, y2), Offset(x2 + 30, y2 + 80));
+
+      paint.color = avab[i] ? Colors.green : Colors.red;
       canvas.drawRect(rect, paint);
       canvas.drawRect(rect2, paint2);
-
-
     }
-
   }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
-  }
-}
+      @override
+      bool shouldRepaint(CustomPainter oldDelegate) {
+        return false;
+      }
+    }

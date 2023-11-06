@@ -7,7 +7,8 @@ class ParkingLot {
   int totalStalls = 0;
   List<ParkingStalls> parkingStalls = const[];
 
-  ParkingLot({this.lotName = "wewoo", this.lotURL = "oops.jpeg", this.totalStalls = 1, this.parkingStalls = const [] });
+
+  ParkingLot({this.lotName = "name error", this.lotURL = "oops.jpeg", this.totalStalls = 1, this.parkingStalls = const [] });
 
   ParkingLot.fromJson(Map<String, dynamic> json) {
     lotName = json['lotName'];
